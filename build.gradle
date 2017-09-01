@@ -1,0 +1,31 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'idea'
+
+//noinspection GroovyUnusedAssignment
+sourceCompatibility = JavaVersion.VERSION_1_8
+//noinspection GroovyUnusedAssignment
+targetCompatibility = JavaVersion.VERSION_1_8
+
+repositories{
+    jcenter()
+}
+
+
+dependencies {
+    testCompile 'org.assertj:assertj-core:3.5.+'
+    testCompile 'org.mockito:mockito-core:2.+'
+}
+
+idea.module{
+    outputDir = file('idea-build')
+    testOutputDir = file('idea-test-build')
+}
+
