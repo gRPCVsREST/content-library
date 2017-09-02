@@ -1,2 +1,6 @@
 .gradle/
 build/
+content-library.iml
+.idea
+idea-build/
+idea-test-build/
