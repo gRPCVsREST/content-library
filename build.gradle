@@ -8,16 +8,16 @@ buildscript {
 
 apply plugin: 'java'
 apply plugin: 'idea'
+apply plugin: 'maven-publish'
 
 //noinspection GroovyUnusedAssignment
 sourceCompatibility = JavaVersion.VERSION_1_8
 //noinspection GroovyUnusedAssignment
 targetCompatibility = JavaVersion.VERSION_1_8
 
-repositories{
+repositories {
     jcenter()
 }
-
 
 dependencies {
     compile 'com.google.guava:guava:23.0'
@@ -28,8 +28,30 @@ dependencies {
     testCompile 'org.mockito:mockito-core:2.+'
 }
 
-idea.module{
+idea.module {
     outputDir = file('idea-build')
     testOutputDir = file('idea-test-build')
 }
 
+jar {}
+
+
+publishing {
+    repositories {
+        maven {
+            url "s3://grpcvsrest/snapshots"
+            authentication {
+                awsIm(AwsImAuthentication) // load from EC2 role or env var
+            }
+        }
+    }
+
+    publications {
+        mavenJava(MavenPublication) {
+            groupId 'org.grpcvsrest'
+            artifactId 'content'
+            version '0.1-SNAPSHOT'
+            from components.java
+        }
+    }
+}
