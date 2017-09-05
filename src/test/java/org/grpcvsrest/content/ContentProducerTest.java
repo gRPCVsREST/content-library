@@ -21,6 +21,12 @@ public class ContentProducerTest {
     }
 
     @Test
+    public void testContent() throws IOException {
+        ContentProducer producer = new ContentProducer("resource.txt");
+        assertThat(producer.content()).containsExactly("foo", "bar");
+    }
+
+    @Test
     public void testSetCallback() throws IOException, InterruptedException {
         ContentProducer producer = new ContentProducer("resource.txt");
         CountDownLatch latch = new CountDownLatch(2);

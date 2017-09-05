@@ -37,4 +37,8 @@ public class ContentProducer {
 
         return content.get(position++);
     }
+
+    public List<String> content() {
+        return content;
+    }
 }
