@@ -43,7 +43,7 @@ public class ContentProducer {
         return hasNext ? content.get(index) : null;
     }
 
-    public List<String> content() {
+    List<String> content() {
         return content;
     }
 }

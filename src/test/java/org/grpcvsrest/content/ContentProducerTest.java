@@ -16,8 +16,8 @@ public class ContentProducerTest {
     @Test
     public void testProduce() throws IOException {
         ContentProducer producer = new ContentProducer("resource.txt");
-        assertThat(producer.next()).isEqualTo("foo");
-        assertThat(producer.next()).isEqualTo("bar");
+        assertThat(producer.next()).isEqualTo(producer.content().get(0));
+        assertThat(producer.next()).isEqualTo(producer.content().get(1));
         assertThat(producer.next()).isNull();
     }
 
