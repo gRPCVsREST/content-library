@@ -1,26 +1,32 @@
 package org.grpcvsrest.content;
 
 import com.google.common.base.Charsets;
+import com.google.common.collect.Lists;
 import com.google.common.io.Resources;
 
+import javax.annotation.Nullable;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
 public class ContentProducer {
     private final List<String> content;
-    private int position = 0;
+    private final AtomicInteger position = new AtomicInteger(0);
     private final Random random = new Random();
 
     public ContentProducer(String resourcePath) throws IOException {
-        content = Collections.unmodifiableList(
-                Resources.readLines(Resources.getResource(resourcePath), Charsets.UTF_8));
+        List<String> lines = Resources.readLines(Resources.getResource(resourcePath), Charsets.UTF_8);
+        ArrayList<String> list = Lists.newArrayList(lines);
+        Collections.shuffle(list);
+        content = Collections.unmodifiableList(list);
     }
 
     public void setCallback(Consumer<String> func) {
-        for(String s: content) {
+        for (String s : content) {
             try {
                 Thread.sleep(random.nextInt(200));
                 func.accept(s);
@@ -30,12 +36,11 @@ public class ContentProducer {
         }
     }
 
-    public synchronized String next() {
-        if (position > content.size() - 1) {
-            return null;
-        }
-
-        return content.get(position++);
+    @Nullable
+    public String next() {
+        int index = position.getAndIncrement();
+        boolean hasNext = index < content.size();
+        return hasNext ? content.get(index) : null;
     }
 
     public List<String> content() {
