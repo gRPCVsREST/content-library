@@ -15,13 +15,15 @@ public class ContentStreamer {
     private final ContentProducer contentProducer;
     private final Consumer<String> consumer;
 
-    public ContentStreamer(ContentProducer contentProducer, Consumer<String> consumer) {
+    public ContentStreamer(ContentProducer contentProducer, Consumer<String> consumer, long randomDelayInMillis) {
         this.contentProducer = contentProducer;
         this.consumer = consumer;
-
-        long randomDelayInMillis = TimeUnit.SECONDS.toMillis(1 + new Random().nextInt(4));
         Timer timer = new Timer();
         timer.schedule(new ContentStreamer.GenerateContentTask(), randomDelayInMillis, randomDelayInMillis);
+    }
+
+    public ContentStreamer(ContentProducer contentProducer, Consumer<String> consumer) {
+        this(contentProducer, consumer, TimeUnit.SECONDS.toMillis(1 + new Random().nextInt(4)));
     }
 
     private class GenerateContentTask extends TimerTask {
