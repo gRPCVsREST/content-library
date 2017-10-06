@@ -1,6 +1,5 @@
 package org.grpcvsrest.content;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -24,7 +23,7 @@ public class ContentProducerTest {
     @Test
     public void testContent() throws IOException {
         ContentProducer producer = new ContentProducer("resource.txt");
-        assertThat(producer.content()).containsExactly("foo", "bar");
+        assertThat(producer.content()).containsOnly("foo", "bar");
     }
 
     @Test
