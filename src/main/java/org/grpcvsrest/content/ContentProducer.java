@@ -8,15 +8,13 @@ import javax.annotation.Nullable;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
-import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Consumer;
 
-public class ContentProducer {
+public class ContentProducer implements Iterator<String> {
     private final List<String> content;
     private final AtomicInteger position = new AtomicInteger(0);
-    private final Random random = new Random();
 
     public ContentProducer(String resourcePath) throws IOException {
         List<String> lines = Resources.readLines(Resources.getResource(resourcePath), Charsets.UTF_8);
@@ -25,25 +23,23 @@ public class ContentProducer {
         content = Collections.unmodifiableList(list);
     }
 
-    public void setCallback(Consumer<String> func) {
-        for (String s : content) {
-            try {
-                Thread.sleep(random.nextInt(200));
-                func.accept(s);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-        }
+    @Override
+    public boolean hasNext() {
+        int index = position.get();
+        return hasNext(index);
     }
 
     @Nullable
     public String next() {
         int index = position.getAndIncrement();
-        boolean hasNext = index < content.size();
-        return hasNext ? content.get(index) : null;
+        return hasNext(index) ? content.get(index) : null;
     }
 
     public List<String> content() {
         return content;
+    }
+
+    private boolean hasNext(int index) {
+        return index < content.size();
     }
 }
