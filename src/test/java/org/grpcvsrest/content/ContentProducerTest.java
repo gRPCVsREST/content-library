@@ -16,15 +16,20 @@ public class ContentProducerTest {
     @Test
     public void testProduce() throws IOException {
         ContentProducer producer = new ContentProducer("resource.txt");
+        assertThat(producer.content()).hasSize(2);
         assertThat(producer.next()).isEqualTo(producer.content().get(0));
         assertThat(producer.next()).isEqualTo(producer.content().get(1));
-        assertThat(producer.next()).isNull();
+        assertThat(producer.next()).isEqualTo(producer.content().get(0));
+        assertThat(producer.next()).isEqualTo(producer.content().get(1));
+        assertThat(producer.next()).isEqualTo(producer.content().get(0));
+        assertThat(producer.next()).isEqualTo(producer.content().get(1));
+        // ... and so on...
     }
 
     @Test
     public void testContent() throws IOException {
         ContentProducer producer = new ContentProducer("resource.txt");
-        assertThat(producer.content()).containsExactly("foo", "bar");
+        assertThat(producer.content()).containsOnly("foo", "bar");
     }
 
     @Test

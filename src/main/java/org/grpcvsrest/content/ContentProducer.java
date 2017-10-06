@@ -15,7 +15,7 @@ import java.util.function.Consumer;
 
 public class ContentProducer {
     private final List<String> content;
-    private final AtomicInteger position = new AtomicInteger(0);
+    private final AtomicInteger position = new AtomicInteger(-1);
     private final Random random = new Random();
 
     public ContentProducer(String resourcePath) throws IOException {
@@ -38,9 +38,8 @@ public class ContentProducer {
 
     @Nullable
     public String next() {
-        int index = position.getAndIncrement();
-        boolean hasNext = index < content.size();
-        return hasNext ? content.get(index) : null;
+        int index = position.accumulateAndGet(0, (x,y) -> (x+1) % content.size());
+        return content.get(index);
     }
 
     List<String> content() {
