@@ -12,13 +12,13 @@ import java.util.function.Consumer;
  */
 public class ContentStreamer {
 
+    private final Timer timer = new Timer();
     private final ContentProducer contentProducer;
     private final Consumer<String> consumer;
 
     public ContentStreamer(ContentProducer contentProducer, Consumer<String> consumer, long randomDelayInMillis) {
         this.contentProducer = contentProducer;
         this.consumer = consumer;
-        Timer timer = new Timer();
         timer.schedule(new ContentStreamer.GenerateContentTask(), randomDelayInMillis, randomDelayInMillis);
     }
 
@@ -30,8 +30,9 @@ public class ContentStreamer {
         @Override
         public void run() {
             String value = contentProducer.next();
-            if (value != null) {
-                consumer.accept(value);
+            consumer.accept(value);
+            if (value == null) {
+                timer.cancel();
             }
         }
     }
