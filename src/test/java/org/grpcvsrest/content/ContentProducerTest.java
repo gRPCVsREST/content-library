@@ -10,10 +10,9 @@ public class ContentProducerTest {
 
     @Test
     public void testProduce() throws IOException {
-        ContentProducer producer = new ContentProducer("resource.txt");
+        ContentProducer producer = new ContentProducer("https://raw.githubusercontent.com/gRPCVsREST/content-library/master/src/main/resources/crypto.txt");
         assertThat(producer.next()).isEqualTo(producer.content().get(0));
         assertThat(producer.next()).isEqualTo(producer.content().get(1));
-        assertThat(producer.next()).isNull();
     }
 
     @Test

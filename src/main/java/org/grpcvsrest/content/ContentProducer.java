@@ -6,6 +6,7 @@ import com.google.common.io.Resources;
 
 import javax.annotation.Nullable;
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -17,7 +18,13 @@ public class ContentProducer implements Iterator<String> {
     private final AtomicInteger position = new AtomicInteger(0);
 
     public ContentProducer(String resourcePath) throws IOException {
-        List<String> lines = Resources.readLines(Resources.getResource(resourcePath), Charsets.UTF_8);
+        URL resource = null;
+        try {
+            resource = Resources.getResource(resourcePath);
+        } catch (Exception e) {
+            resource = new URL(resourcePath);
+        }
+        List<String> lines = Resources.readLines(resource, Charsets.UTF_8);
         ArrayList<String> list = Lists.newArrayList(lines);
         Collections.shuffle(list);
         content = Collections.unmodifiableList(list);
